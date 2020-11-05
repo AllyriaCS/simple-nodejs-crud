@@ -72,25 +72,50 @@
   <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
   <script>
     $('#btnLoad').on('click', function () {
-      $('#myTable').DataTable({
-        ajax: {
-          headers: {
-            'x-access-token': localStorage.getItem('accessToken')
-          },
-          url: 'http://localhost:3000/api/actor',
-          dataSrc: ''
+      $.ajax({
+        url: 'http://localhost:3000/api/actor',
+        type: 'GET',
+        headers: {
+          'x-access-token': localStorage.getItem('accessToken')
         },
-        columns: [{
-            data: 'actor_id'
-          },
-          {
-            data: 'first_name'
-          },
-          {
-            data: 'last_name'
-          },
+      }).done(function (result) {
+        for (actor of result) {
+          const tr = `<tr>
+                <td>${actor.id}</td>
+                <td>${actor.first_name}</td>
+                <td>${actor.last_name}</td>
+              </tr>`;
+          $('#film_container').append(tr);
+        }
 
-        ]
+        $('#myTable').DataTable();
+      }).fail(async function (jqXHR, textStatus, errorThrown) {
+        // alert("het han rui, nhung nhan ok la lay dc luon");
+        // const expiredAccessToken = localStorage.getItem("accessToken");
+        // const payload = jwt.verify(expiredAccessToken, 'SECRET', {
+        //   ignoreExpiration: true
+        // });
+        // if (user) {
+        //   const username = payload.userName;
+        //   const refreshToken = payload.refreshToken;
+        //   $.ajax({
+        //     url: 'http://localhost:3000/api/auth/refresh',
+        //     type: 'POST',
+        //     data: JSON.stringify({
+        //       username: username,
+        //       refreshToken: refreshToken
+        //     }),
+        //     contentType: "application/json; charset=utf-8",
+        //     dataType: 'JSON',
+        //     success: function (data) {
+        //       localStorage.setItem("accessToken", data.accessToken)
+        //     },
+        //   })
+        // }
+        alert("failed roi ne");
+        // send accessToken luu trong localStorage cho api/auth/refresh
+        // api se boc' tach' ra roi refresh nguoc lai
+        // done, setItem trong localStorage lai la accessToken da duoc tra ve tu api
       });
     })
   </script>

@@ -73,7 +73,7 @@
                     last_name: last_name
                 }),
                 headers: {
-                    'x-access-token': localStorage.getItem('accessToken')
+                    'x-access-token': sessionStorage.getItem('accessToken')
                 },
                 contentType: "application/json; charset=utf-8",
                 dataType: 'JSON',

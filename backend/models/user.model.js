@@ -22,4 +22,8 @@ module.exports = {
   add(user) {
     return db("users").returning("id").insert(user);
   },
+
+  async updateRefreshToken(id, refreshToken) {
+    return db("users").where("id", id).update({ rfToken: refreshToken });
+  },
 };
