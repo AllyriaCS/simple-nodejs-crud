@@ -26,7 +26,7 @@ router.post("/", async function (req, res) {
       userId: user.id,
       exp: Math.floor(Date.now() / 1000) + 60 * 60,
     },
-    "caominhduc123"
+    "SECRET"
   );
 
   res.json({
