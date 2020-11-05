@@ -52,6 +52,9 @@
             let actor_id = parseInt($("#actorId").val());
             $.ajax({
                 url: `http://localhost:3000/api/actor/${actor_id}`,
+                headers: {
+                    'x-access-token': localStorage.getItem('accessToken')
+                },
                 type: 'DELETE',
                 success: function () {
                     alert("Deleted");
