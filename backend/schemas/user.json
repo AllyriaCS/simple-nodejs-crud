@@ -2,13 +2,21 @@
     "additionalProperties": false,
     "required": [
         "username",
-        "password"
+        "password",
+        "name",
+        "email"
     ],
     "properties": {
         "username": {
             "type": "string"
         },
         "password": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "email": {
             "type": "string"
         }
     }

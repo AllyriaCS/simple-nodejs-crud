@@ -4,6 +4,7 @@ const cors = require("cors");
 require("express-async-errors");
 
 const app = express();
+const auth = require("./middleware/auth.mdw");
 
 app.use(morgan("dev"));
 app.use(cors());
@@ -13,7 +14,9 @@ app.get("/", function (req, res) {
   res.json(1);
 });
 
-app.use("/api/actor", require("./routes/actor.route"));
+app.use("/api/auth", require("./routes/auth.route"));
+app.use("/api/users", require("./routes/user.route"));
+app.use("/api/actor", auth, require("./routes/actor.route"));
 
 app.use(function (req, res, next) {
   res.status(404).send({
