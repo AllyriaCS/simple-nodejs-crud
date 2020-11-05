@@ -74,6 +74,9 @@
     $('#btnLoad').on('click', function () {
       $('#myTable').DataTable({
         ajax: {
+          headers: {
+            'x-access-token': localStorage.getItem('accessToken')
+          },
           url: 'http://localhost:3000/api/actor',
           dataSrc: ''
         },
@@ -89,25 +92,6 @@
 
         ]
       });
-      // $.ajax({
-      //   url: 'http://localhost:3000/api/film',
-      //   type: 'GET',
-      // }).done(function (result) {
-      //   for (film of result) {
-      //     const tr = `<tr>
-      //           <td>${film.film_id}</td>
-      //           <td>${film.title}</td>
-      //           <td>${film.release_year}</td>
-      //           <td>${film.length}</td>
-      //           <td>${film.rating}</td>
-      //           <td>${film.special_features}</td>
-      //           <td>${film.replacement_cost}</td>
-      //         </tr>`;
-      //     $('#film_container').append(tr);
-      //   }
-
-      //   $('#myTable').DataTable();
-      // });
     })
   </script>
 </body>

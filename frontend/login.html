@@ -14,7 +14,7 @@
     <div class="container">
         <div class="row mt-5">
             <div class="col-sm-12">
-                <div class="card border-color">
+                <div class="card border-color shadow">
                     <div class="card-header card-header-background text-center">
                         <span class="text-capitalize font-weight-bold">Login</span>
                     </div>
@@ -29,7 +29,8 @@
                                                         class="fa fa-user"></i></span>
                                             </div>
                                             <input type="text" class="form-control" placeholder="Username"
-                                                aria-label="Username" name="username" aria-describedby="basic-addon1">
+                                                aria-label="Username" id="username" name="username"
+                                                aria-describedby="basic-addon1">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -38,13 +39,13 @@
                                                 <span class="input-group-text" id="basic-addon2"><i
                                                         class="fa fa-lock"></i></span>
                                             </div>
-                                            <input type="password" name="password" class="form-control"
+                                            <input type="password" name="password" id="password" class="form-control"
                                                 placeholder="Password" aria-label="Password"
                                                 aria-describedby="basic-addon2">
                                         </div>
                                     </div>
-                                    <button type="submit"
-                                        class="button-background-color btn-block btn btn-primary mb-4 font-weight-bold">Login</button>
+                                    <button id="submitButton" type="submit"
+                                        class="button-background-color btn-block btn btn-primary mb-5 font-weight-bold">Login</button>
                                 </form>
                             </div>
                         </div>
@@ -55,6 +56,30 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript">
+        $("#submitButton").on("click", function (event) {
+            event.preventDefault();
+            let username = String($("#username").val());
+            let password = String($("#password").val());
+            $.ajax({
+                url: 'http://localhost:3000/api/auth',
+                type: 'POST',
+                data: JSON.stringify({
+                    username: username,
+                    password: password
+                }),
+                contentType: "application/json",
+                dataType: 'json',
+                success: function (data, textStatus, jqXHR) {
+                    localStorage.setItem("accessToken", data.accessToken);
+                    window.location.href = 'index.html';
+                },
+                error: function () {
+                    alert(`Login failed`);
+                },
+            })
+        })
+    </script>
 </body>
 
 </html>
