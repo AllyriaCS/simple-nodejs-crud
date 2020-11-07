@@ -54,29 +54,54 @@
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
     <script type="text/javascript">
+        let current;
+        let expiredTime;
+        $(document).ready(function () {
+            current = Math.floor(Date.now() / 1000);
+            expiredTime = current + 30;
+        })
+
+
         $("#submitButton").on("click", function (event) {
-            event.preventDefault();
-            let first_name = String($("#first_name").val());
-            let last_name = String($("#last_name").val());
-            $.ajax({
-                url: 'http://localhost:3000/api/actor',
-                headers: {
-                    'x-access-token': localStorage.getItem('accessToken')
-                },
-                type: 'POST',
-                data: JSON.stringify({
-                    first_name: first_name,
-                    last_name: last_name
-                }),
-                contentType: "application/json; charset=utf-8",
-                dataType: 'JSON',
-                success: function () {
-                    alert(`Create actor success`);
-                },
-                error: function () {
-                    alert(`Create actor failed!`);
-                },
-            })
+            if (Math.floor(Date.now() / 1000) < expiredTime) {
+                event.preventDefault();
+                let first_name = String($("#first_name").val());
+                let last_name = String($("#last_name").val());
+                $.ajax({
+                    url: 'http://localhost:3000/api/actor',
+                    headers: {
+                        'x-access-token': localStorage.getItem('accessToken')
+                    },
+                    type: 'POST',
+                    data: JSON.stringify({
+                        first_name: first_name,
+                        last_name: last_name
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'JSON',
+                    success: function () {
+                        alert(`Create actor success`);
+                    },
+                    error: function () {
+                        alert(`Create actor failed!`);
+                    },
+                })
+            } else {
+                $.ajax({
+                    url: 'http://localhost:3000/api/auth/refresh',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({
+                        accessToken: localStorage.getItem("accessToken"),
+                        refreshToken: localStorage.getItem("refreshToken")
+                    })
+                }).done(function (data) {
+                    localStorage.setItem('accessToken', data.accessToken);
+                    expiredTime = Math.floor(Date.now() / 1000) + 600;
+                })
+            }
+
         })
     </script>
 </body>

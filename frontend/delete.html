@@ -47,22 +47,46 @@
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
     <script type="text/javascript">
+        let current;
+        let expiredTime;
+        $(document).ready(function () {
+            current = Math.floor(Date.now() / 1000);
+            expiredTime = current + 30;
+        })
+
         $("#deleteBtn").on("click", function (event) {
-            event.preventDefault();
-            let actor_id = parseInt($("#actorId").val());
-            $.ajax({
-                url: `http://localhost:3000/api/actor/${actor_id}`,
-                headers: {
-                    'x-access-token': localStorage.getItem('accessToken')
-                },
-                type: 'DELETE',
-                success: function () {
-                    alert("Deleted");
-                },
-                error: function () {
-                    alert(`Error on delete actor with actor id: ${actor_id}`);
-                },
-            })
+            if (Math.floor(Date.now() / 1000) < expiredTime) {
+                event.preventDefault();
+                let actor_id = parseInt($("#actorId").val());
+                $.ajax({
+                    url: `http://localhost:3000/api/actor/${actor_id}`,
+                    headers: {
+                        'x-access-token': localStorage.getItem('accessToken')
+                    },
+                    type: 'DELETE',
+                    success: function () {
+                        alert("Deleted");
+                    },
+                    error: function () {
+                        alert(`Error on delete actor with actor id: ${actor_id}`);
+                    },
+                })
+            } else {
+                $.ajax({
+                    url: 'http://localhost:3000/api/auth/refresh',
+                    type: 'POST',
+                    dataType: 'JSON',
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({
+                        accessToken: localStorage.getItem("accessToken"),
+                        refreshToken: localStorage.getItem("refreshToken")
+                    })
+                }).done(function (data) {
+                    localStorage.setItem('accessToken', data.accessToken);
+                    expiredTime = Math.floor(Date.now() / 1000) + 600;
+                })
+            }
+
         })
     </script>
 </body>

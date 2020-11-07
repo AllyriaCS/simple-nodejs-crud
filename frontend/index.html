@@ -80,7 +80,6 @@
 
     $("#btnLoad").on('click', function () {
       if (Math.floor(Date.now() / 1000) < expiredTime) {
-        console.log("zo if tren roi ne");
         $.ajax({
           url: 'http://localhost:3000/api/actor',
           type: 'GET',
@@ -99,7 +98,6 @@
           $('#myTable').DataTable();
         })
       } else {
-        console.log("zo het han roi ne");
         $.ajax({
           url: 'http://localhost:3000/api/auth/refresh',
           type: 'POST',
@@ -110,9 +108,7 @@
             refreshToken: localStorage.getItem("refreshToken")
           })
         }).done(function (data) {
-          console.log("zo cai token moi roi");
           localStorage.setItem('accessToken', data.accessToken);
-          console.log("token moi la " + data.accessToken);
           expiredTime = Math.floor(Date.now() / 1000) + 600;
         })
       }
