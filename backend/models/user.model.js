@@ -26,4 +26,14 @@ module.exports = {
   async updateRefreshToken(id, refreshToken) {
     return db("users").where("id", id).update({ rfToken: refreshToken });
   },
+
+  async isRefreshTokenExisted(id, refreshToken) {
+    const list = await db("users")
+      .where("id", id)
+      .andWhere("rfToken", refreshToken);
+
+    if (list.length > 0) return true;
+
+    return false;
+  },
 };

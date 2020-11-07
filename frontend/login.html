@@ -73,6 +73,7 @@
                 success: function (data, textStatus, jqXHR) {
                     if (data.authenticated === true) {
                         localStorage.setItem("accessToken", data.accessToken);
+                        localStorage.setItem("refreshToken", data.refreshToken);
                         window.location.href = 'index.html';
                     } else {
                         alert("Username or password invalid!");

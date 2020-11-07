@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 require("express-async-errors");
 
 const app = express();
@@ -9,6 +10,7 @@ const auth = require("./middleware/auth.mdw");
 app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 app.get("/", function (req, res) {
   res.json(1);

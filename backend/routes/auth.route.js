@@ -25,12 +25,12 @@ router.post("/", async function (req, res) {
   const accessToken = jwt.sign(
     {
       userId: user.id,
-      userName: user.username,
-      refreshToken: user.rfToken,
-      exp: Math.floor(Date.now() / 1000) + 60,
+      exp: Math.floor(Date.now() / 1000) + 30,
     },
     "SECRET"
   );
+
+  res.cookie("refreshToken", refreshToken);
 
   res.json({
     authenticated: true,
@@ -39,37 +39,31 @@ router.post("/", async function (req, res) {
   });
 });
 
-/**
- * username
- * refreshToken
- */
 router.post("/refresh", async function (req, res) {
-  const user = await userModel.singleByUsername(req.body.username);
-  if (user == null) {
-    return res.json({
-      authenticated: false,
-    });
-  }
-  console.log(req.body.refreshToken);
-  console.log(user.rfToken);
-  if (req.body.refreshToken == user.rfToken) {
+  const payload = jwt.verify(req.body.accessToken, "SECRET", {
+    ignoreExpiration: true,
+  });
+  const refreshToken = req.body.refreshToken;
+  const ret = await userModel.isRefreshTokenExisted(
+    payload.userId,
+    refreshToken
+  );
+  if (ret === true) {
     const accessToken = jwt.sign(
       {
-        userId: user.id,
-        exp: Math.floor(Date.now() / 1000) + 60,
+        userId: payload.userId,
       },
-      "SECRET"
+      "SECRET",
+      {
+        expiresIn: Math.floor(Date.now() / 1000) + 600,
+      }
     );
 
-    return res.json({
-      authenticated: true,
-      accessToken,
-      refreshToken: user.rfToken,
-    });
+    return res.json({ accessToken });
   }
 
-  res.status(401).json({
-    message: "Invalid refresh token",
+  res.status(400).json({
+    message: "Invalid refresh token.",
   });
 });
 
